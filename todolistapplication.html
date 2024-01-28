@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+</head>
+<body>
+    <div id="taskInput">                              
+        <input type="text" id="task" placeholder="Enter your task">
+        <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <div id="taskList">
+    </div>
+
+    <div id="completedTasks">
+        <h2>Completed Tasks</h2>
+    </div>
+    <script>
+    function addTask() 
+        {
+            const taskInput = document.getElementById('task');
+            const taskValue = taskInput.value;
+            if (taskValue.trim() !== '') 
+            {
+                const taskItem = document.createElement('div');
+                taskItem.innerHTML = `
+                    <input type="checkbox" onchange="completeTask(this)">
+                    <span>${taskValue}</span>
+                    <button onclick="removeTask(this)">Remove</button>`;
+                document.getElementById('taskList').appendChild(taskItem);
+                taskInput.value = '';
+                saveTasks();
+            }
+        }
+        function completeTask(checkbox) 
+        {
+            const taskText = checkbox.nextElementSibling;
+            const completedTasks = document.getElementById('completedTasks');
+            if (checkbox.checked)
+             {
+                completedTasks.appendChild(checkbox.parentNode);
+                saveTasks();
+            }
+        }
+        function removeTask(button)
+         {
+            const taskItem = button.parentNode;
+            taskItem.parentNode.removeChild(taskItem);
+            saveTasks();
+        }
+        function saveTasks() 
+        {
+            const taskList = document.getElementById('taskList').innerHTML;
+            const completedTasks = document.getElementById('completedTasks').innerHTML;
+            localStorage.setItem('taskList', taskList);
+            localStorage.setItem('completedTasks', completedTasks);
+        }
+        window.onload = function ()
+         {
+            const taskList = localStorage.getItem('taskList');
+            const completedTasks = localStorage.getItem('completedTasks');
+            if (taskList) 
+            {
+                document.getElementById('taskList').innerHTML = taskList;
+            }
+            if (completedTasks)
+             {
+                document.getElementById('completedTasks').innerHTML = completedTasks;
+            }
+        }
+        </script>
+</body>
+</html>
